@@ -116,7 +116,7 @@ def createRecipient(authData):
     payload = {}
     response = requests.request("GET", url, headers=headers, data=payload)
     return response.json()['Recipients']
-def getRecipients():
+def getRecipients(authData):
     url = "http://ncrdev-dev.apigee.net/digitalbanking/db-recipients/v1/recipients"
     headers = {
     'transactionId': transactionId,
@@ -160,7 +160,7 @@ def makeATransaction(username,password,amount,type):
     authData['access_token'] = userAccount.access_token
     #print(userAccount.username + " " + userAccount.i_u_d + " " + str(userAccount.availableBalance['amount']))
     createRecipient(authData)
-    createTransfer(userAccount,getRecipients())
+    createTransfer(userAccount,getRecipients(authData))
 
 val = input("Welcome to your ATM press any key to continue")
 val = input("Are you here to deposit withdraw via QR code? (y/n)") 
