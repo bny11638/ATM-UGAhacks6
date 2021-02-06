@@ -32,37 +32,52 @@ class ATM(Tk):
 class frameWelcome(Frame):
     def __init__(self, master):
         Frame.__init__(self,master)
-        Message(self, text="Protecting what matters.",width = 350, font=('helvetica', '18', 'bold')).pack()
+        Message(self, text="Access your money securely & safely.",width = 350, font=('helvetica', '18', 'bold')).pack()
         Button(self, text="Bank Login",command=lambda:master.switch_frame(frameLogin),font=('helvetica', '12')).pack(pady=10)
         Button(self, text="Register",font=('helvetica', '12')).pack(pady=10)
 
 # Frame for selecting action to perform at the ATM
+class frameMap(Frame):
+    def __init__(self,master):
+        Frame.__init__(self,master)
+        prompt = Message(self, text="Search for ATMs", font=('helvetica', '12', 'bold'),width=200).grid(row=0, column=0)
+        search_map = Entry(self,width=30).grid(row=0,column=1)
+        Button(self, text="Select ATM",command=lambda:master.switch_frame(frameATMAction),font=('helvetica', '12')).grid(row=2,column=1)
+
 class frameATMAction(Frame):
     def __init__(self, master):
         Frame.__init__(self,master)
-        Message(self, text="Select your ATM action below.",width = 350, font=('helvetica', '18', 'bold')).pack()
-        Button(self, text="Deposit",command=lambda:master.switch_frame(frameDepositAction),font=('helvetica', '12')).pack(pady=10)
-        Button(self, text="Withdraw",command=lambda:master.switch_frame(frameWithdrawAction),font=('helvetica', '12')).pack(pady=10)
+        Button(self, text="Back", command=lambda:master.switch_frame(frameMap),font=('helvetica', '12')).grid(row=0,column=0)
+        Message(self, text="Select your ATM action below.",width = 350, font=('helvetica', '18', 'bold')).grid(row=0,column=1)
+        Button(self, text="Deposit",command=lambda:master.switch_frame(frameDepositAction),font=('helvetica', '12')).grid(row=1,column=1)
+        Button(self, text="Withdraw",command=lambda:master.switch_frame(frameWithdrawAction),font=('helvetica', '12')).grid(row=2,column=1)
 
 class frameDepositAction(Frame):
     def __init__(self, master):
         Frame.__init__(self,master)
-        Button(self, text="Test", command=print(master.username)).grid()
         Button(self, text="Back", command=lambda:master.switch_frame(frameATMAction),font=('helvetica', '12')).grid()
+        Button(self, text="Submit", command=lambda:master.switch_frame(frameQR)).grid(row=3,column=1)
         Message(self, text="Enter the amount you would like to deposit.",width = 350, font=('helvetica', '18', 'bold')).grid(row=1,column=1)
-        depositAmount = Entry(self,width=30)
-        depositAmount.grid(row=2,column=1)
+        deposit_amount = Entry(self,width=30).grid(row=2,column=1)
 
+class frameQR(Frame):
+    def __init__(self,master):
+        Frame.__init__(self,master)
+        Button(self, text="Cancel Transaction", command=lambda:master.switch_frame(frameATMAction),font=('helvetica', '12')).grid(row=0,column=0)
+        Message(self, text="Please scan this QR code at the ATM you have selected.",width=200,font=('helvetica', '18', 'bold')).grid(row=1,column=1)
 
 class frameWithdrawAction(Frame):
     def __init__(self, master):
         Frame.__init__(self,master)
-        Message(self, text="Enter the amount you would like to withdraw.",width = 350, font=('helvetica', '18', 'bold')).pack()
+        Button(self, text="Back", command=lambda:master.switch_frame(frameATMAction),font=('helvetica', '12')).grid()
+        Button(self, text="Submit", command=lambda:master.switch_frame(frameQR)).grid(row=3,column=1)
+        Message(self, text="Enter the amount you would like to withdraw.",width = 350, font=('helvetica', '18', 'bold')).grid(row=1,column=1)
+        withdraw_amount = Entry(self,width=30).grid(row=2,column=1)
 
 class frameLogin(Frame):
     def __init__(self,master):
         Frame.__init__(self,master)
-        Message(self, text="Protecting what matters.",width = 350,  font=('helvetica', '18', 'bold')).pack()
+        Message(self, text="Welcome Back!",width = 350,  font=('helvetica', '18', 'bold')).pack()
         Label(self,text="Username",pady=10, font=('helvetica', '12', 'bold')).pack(pady=2)
         userInput = Entry(self,width=30)
         userInput.pack()
@@ -76,7 +91,7 @@ class frameLogin(Frame):
     def saveAndSwitch(self,master,user,password):
         master.username = user.get()
         master.password = password.get()
-        master.switch_frame(frameATMAction)
+        master.switch_frame(frameMap)
 
  #:) starting the app
 if __name__ == "__main__":
