@@ -148,11 +148,25 @@ authData['access_token'] = userAccount.access_token
 #createRecipient(authData)
 #createTransfer(userAccount,getRecipients())
 """
+def makeATransaction(username,password,amount,type):
+    authData = getAuthenticate(username,password)
+    acctOneData = getChecking(authData)
+    userAccount = Account(acctOneData['id'],acctOneData['institutionUserId'],acctOneData['institutionId'],acctOneData['accountNumber'],acctOneData['availableBalance'],"HACKATHONUSER217",authData['access_token'],acctOneData['institutionCustomerId'])
+    #This will act as the outside world/unlimited bank
+    #authData = getAuthenticate("HACKATHONUSER218","uga123")
+    #acctOneData = getChecking(authData)
+    #worldAccount = Account(acctOneData['id'],acctOneData['institutionUserId'],acctOneData['institutionId'],acctOneData['accountNumber'],acctOneData['availableBalance'],"HACKATHONUSER218",authData['access_token'],acctOneData['institutionCustomerId'])
+    authData['access_token'] = userAccount.access_token
+    #print(userAccount.username + " " + userAccount.i_u_d + " " + str(userAccount.availableBalance['amount']))
+    createRecipient(authData)
+    createTransfer(userAccount,getRecipients())
+
 val = input("Welcome to your ATM press any key to continue")
 val = input("Are you here to deposit withdraw via QR code? (y/n)") 
 if (val == 'y'):
     print("Scan your QR code now:")
-    print(scanQR())
+    data = json.loads(scanQR())
+    makeATransaction(data['username'],data['password'],data['amount'],data['transaction'])
 else:
     print("Have a great day!")
 
