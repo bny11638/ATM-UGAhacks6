@@ -150,7 +150,7 @@ authData['access_token'] = userAccount.access_token
 #createRecipient(authData)
 #createTransfer(userAccount,getRecipients())
 """
-def makeATransaction(username,password,amount,type):
+def makeATransaction(username,password,amount):
     authData = getAuthenticate(username,password)
     acctOneData = getChecking(authData)
     userAccount = Account(acctOneData['id'],acctOneData['institutionUserId'],acctOneData['institutionId'],acctOneData['accountNumber'],acctOneData['availableBalance'],"HACKATHONUSER217",authData['access_token'],acctOneData['institutionCustomerId'])
@@ -170,7 +170,7 @@ val = input("Are you here to deposit or withdraw via QR code? (y/n)")
 if (val == 'y'):
     print("Scan your QR code now:")
     data = json.loads(scanQR())
-    makeATransaction(data['username'],data['password'],data['amount'],data['transaction'])
+    makeATransaction(data['u'],data['p'],data['amt'])
 else:
     print("Have a great day!")
 
