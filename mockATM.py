@@ -163,7 +163,7 @@ def makeATransaction(username,password,amount,type):
     createRecipient(authData)
     if(createTransfer(userAccount,getRecipients(authData)) == "SUCCESS"):
         print("QR code request has been completed!")
-        print("Balance of " + username + " is now: " + str(int(userAccount.availableBalance) + int(amount)))
+        print("Balance of " + username + " is now: " + str(int(userAccount.availableBalance['amount']) + int(amount)))
 
 val = input("Welcome to your ATM press any key to continue")
 val = input("Are you here to deposit or withdraw via QR code? (y/n)") 
