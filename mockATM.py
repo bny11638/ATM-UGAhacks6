@@ -90,7 +90,8 @@ def createTransfer(acctOne, recipient):
     'Content-Type': 'application/json'
     }
     response = requests.request("POST", url, headers=headers, data=payload)
-    print(response.text)
+    #print(response.text)
+    return response.json()['status']
 
 
 def getChecking(authData):
@@ -160,7 +161,9 @@ def makeATransaction(username,password,amount,type):
     authData['access_token'] = userAccount.access_token
     #print(userAccount.username + " " + userAccount.i_u_d + " " + str(userAccount.availableBalance['amount']))
     createRecipient(authData)
-    createTransfer(userAccount,getRecipients(authData))
+    if(createTransfer(userAccount,getRecipients(authData)) == "SUCCESS"):
+        print("QR code request has been completed!")
+        print("Balance of " + username + " is now: " + str(int(userAccount) + int(amount))
 
 val = input("Welcome to your ATM press any key to continue")
 val = input("Are you here to deposit withdraw via QR code? (y/n)") 
