@@ -127,7 +127,7 @@ val = input("Are you here to deposit withdraw via QR code? (y/n)")
 if (val == 'y'):
     print("Scan your QR code now:")
     print(qrReader.scanQR())
-else():
+else:
     print("Have a great day!")
 
 
