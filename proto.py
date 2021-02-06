@@ -45,22 +45,24 @@ class frameWelcome(Frame):
 # Frame home
 class frameHome(Frame):
     def __init__(self, master):
-        Frame.__init__(self,master)
+        Frame.__init__(self,master,bg="white")
         hello = Label(self, text="Hello " + master.username + "!", width=50,font=('arial', '24', 'bold'),bg="#51B948",fg="white")
         hello.config(anchor=CENTER)
         hello.pack()
+        Button(self, text="InstaCash",command=lambda:master.switch_frame(frameMap),font=('arial', '12')).pack()
+
 
 # Frame for selecting action to perform at the ATM
 class frameMap(Frame):
     def __init__(self,master):
-        Frame.__init__(self,master)
+        Frame.__init__(self,master,bg="white")
         prompt = Message(self, text="Search for ATMs", font=('arial', '12', 'bold'),width=200).grid(row=0, column=0)
         search_map = Entry(self,width=30).grid(row=0,column=1)
         Button(self, text="Select ATM",command=lambda:master.switch_frame(frameATMAction),font=('arial', '12')).grid(row=2,column=1)
 
 class frameATMAction(Frame):
     def __init__(self, master):
-        Frame.__init__(self,master)
+        Frame.__init__(self,master,bg="white")
         Button(self, text="Back", command=lambda:master.switch_frame(frameMap),font=('arial', '12')).grid(row=0,column=0)
         Message(self, text="Select your ATM action below.",width = 350, font=('arial', '18', 'bold')).grid(row=0,column=1)
         Button(self, text="Deposit",command=lambda:master.switch_frame(frameDepositAction),font=('arial', '12')).grid(row=1,column=1)
@@ -68,7 +70,7 @@ class frameATMAction(Frame):
 
 class frameDepositAction(Frame):
     def __init__(self, master):
-        Frame.__init__(self,master)
+        Frame.__init__(self,master,bg="white")
         Button(self, text="Back", command=lambda:master.switch_frame(frameATMAction),font=('arial', '12')).grid()
         Button(self, text="Submit", command=lambda:master.switch_frame(frameQR)).grid(row=3,column=1)
         Message(self, text="Enter the amount you would like to deposit.",width = 350, font=('arial', '18', 'bold')).grid(row=1,column=1)
@@ -76,13 +78,13 @@ class frameDepositAction(Frame):
 
 class frameQR(Frame):
     def __init__(self,master):
-        Frame.__init__(self,master)
+        Frame.__init__(self,master,bg="white")
         Button(self, text="Cancel Transaction", command=lambda:master.switch_frame(frameATMAction),font=('arial', '12')).grid(row=0,column=0)
         Message(self, text="Please scan this QR code at the ATM you have selected.",width=200,font=('arial', '18', 'bold')).grid(row=1,column=1)
 
 class frameWithdrawAction(Frame):
     def __init__(self, master):
-        Frame.__init__(self,master)
+        Frame.__init__(self,master,bg="white")
         Button(self, text="Back", command=lambda:master.switch_frame(frameATMAction),font=('arial', '12')).grid()
         Button(self, text="Submit", command=lambda:master.switch_frame(frameQR)).grid(row=3,column=1)
         Message(self, text="Enter the amount you would like to withdraw.",width = 350, font=('arial', '18', 'bold')).grid(row=1,column=1)
