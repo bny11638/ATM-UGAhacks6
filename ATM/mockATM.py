@@ -1,6 +1,7 @@
 #This will be the mock atm for making transactions with that will be run on the raspberry PI
 import json
 import requests
+from ATM import qrReader
 
 
 #authData = {} # holds access token
@@ -107,6 +108,7 @@ def getRecipients():
 
 #main loop for script
 #intializing User Account     def __init__(id,institutionUserid,institutionId,accountNumber,availableBalance,username,access_token):
+"""
 authData = getAuthenticate("HACKATHONUSER217","uga123")
 acctOneData = getChecking(authData)
 userAccount = Account(acctOneData['id'],acctOneData['institutionUserId'],acctOneData['institutionId'],acctOneData['accountNumber'],acctOneData['availableBalance'],"HACKATHONUSER217",authData['access_token'],acctOneData['institutionCustomerId'])
@@ -115,10 +117,20 @@ authData = getAuthenticate("HACKATHONUSER218","uga123")
 acctOneData = getChecking(authData)
 worldAccount = Account(acctOneData['id'],acctOneData['institutionUserId'],acctOneData['institutionId'],acctOneData['accountNumber'],acctOneData['availableBalance'],"HACKATHONUSER218",authData['access_token'],acctOneData['institutionCustomerId'])
 authData['access_token'] = userAccount.access_token
-print(userAccount.username + " " + userAccount.i_u_d + " " + str(userAccount.availableBalance['amount']))
-print(worldAccount.username + " " + worldAccount.i_u_d + " " + str(worldAccount.availableBalance['amount']))
-createRecipient(authData)
-createTransfer(userAccount,getRecipients())
+#print(userAccount.username + " " + userAccount.i_u_d + " " + str(userAccount.availableBalance['amount']))
+#print(worldAccount.username + " " + worldAccount.i_u_d + " " + str(worldAccount.availableBalance['amount']))
+#createRecipient(authData)
+#createTransfer(userAccount,getRecipients())
+"""
+val = input("Welcome to your ATM press any key to continue")
+val = input("Are you here to deposit withdraw via QR code? (y/n)") 
+if (val == 'y'):
+    print("Scan your QR code now:")
+    print(qrReader.scanQR())
+else():
+    print("Have a great day!")
+
+
 
 
 
