@@ -223,7 +223,7 @@ class ATM(Tk):
 class frameWelcome(Frame):
     def __init__(self, master):
         Frame.__init__(self,master,bg="#51B948")
-        Label(self,image=master.ncr_img,font=('arial', '50'),bg="#51B948").pack(pady=100)
+        Label(self,image=master.ncr_img,font=('arial', '50'),bg="#51B948").pack(pady=50)
         Button(self,image=master.scan_img,command=lambda:self.scanQR(master),borderwidth=0,bg="#51B948",activebackground="#51B948").pack(pady=10)
         Button(self,image=master.mandep_img,command=lambda:self.scanQR(master),borderwidth=0,bg="#51B948",activebackground="#51B948").pack(pady=10)
         Button(self,image=master.manwith_img,command=lambda:self.scanQR(master),borderwidth=0,bg="#51B948",activebackground="#51B948").pack(pady=10)
