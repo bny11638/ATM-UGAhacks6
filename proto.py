@@ -124,12 +124,16 @@ class ATM(Tk):
         withdraw = withdraw.resize((200,50), Image.ANTIALIAS)
         im_withdraw = ImageTk.PhotoImage(withdraw)
         self.withdraw_img = im_withdraw
+        ncr = Image.open("resources/ncr.png")
+        ncr = ncr.resize((200, 50), Image.ANTIALIAS)
+        im_ncr = ImageTk.PhotoImage(ncr)
+        self.ncr_img = im_ncr
 
 
 class frameWelcome(Frame):
     def __init__(self, master):
         Frame.__init__(self,master,bg="white")
-        Label(self,text="   ", width=300, bg="#51B948",font=('arial', '35', 'bold')).pack()
+        Label(self,image=master.ncr_img, width=300, bg="#51B948",font=('arial', '35', 'bold')).pack(fill="x",ipady=10)
         Message(self, text="Access your money securely and safely.",width = 250, font=('arial', '30', 'bold'),fg="black",bg="white").pack(pady=100)
         Button(self, image=master.login_img,command=lambda:master.switch_frame(frameLogin),font=('arial', '12'),borderwidth=0,activebackground="white",bg='white').pack(pady=100)
 
@@ -137,7 +141,7 @@ class frameWelcome(Frame):
 class frameHome(Frame):
     def __init__(self, master):
         Frame.__init__(self,master,bg="white")
-        Label(self,text="   ", width=300, bg="#51B948",font=('arial', '35', 'bold')).pack()
+        Label(self,image=master.ncr_img, width=300, bg="#51B948",font=('arial', '35', 'bold')).pack(fill="x",ipady=10)
         hello2 = Label(self, text=master.username,font=('arial', '24', 'bold'),bg="white")
         hello2.config(anchor=CENTER)
         hello2.pack()
@@ -155,7 +159,7 @@ class frameHome(Frame):
 class frameMap(Frame):
     def __init__(self,master):
         Frame.__init__(self,master,bg="white")
-        Label(self,text="   ", width=300, bg="#51B948",font=('arial', '35', 'bold')).pack()
+        Label(self,image=master.ncr_img, width=300, bg="#51B948",font=('arial', '35', 'bold')).pack(fill="x",ipady=10)
         Button(self, text="Back", command=lambda:master.switch_frame(frameHome),font=('arial', '12'),borderwidth=0,activebackground="white",bg='white').pack(anchor="w")
         prompt = Message(self, text="Nearest ATM Machines:", font=('arial', '24'),width=400,bg="white").pack(pady=50)
         self.initMap(master)
@@ -171,7 +175,7 @@ class frameMap(Frame):
 class frameATMAction(Frame):
     def __init__(self, master):
         Frame.__init__(self,master,bg="white")
-        Label(self,text="   ", width=300, bg="#51B948",font=('arial', '35', 'bold')).pack()
+        Label(self,image=master.ncr_img, width=300, bg="#51B948",font=('arial', '35', 'bold')).pack(fill="x",ipady=10)
         Button(self, text="Back", command=lambda:master.switch_frame(frameMap),font=('arial', '12'),borderwidth=0,activebackground="white",bg='white').pack(anchor="w")
         Message(self, text="Select your ATM action below.",width=250, font=('arial', '24'),bg="white").pack(pady=50)
         Button(self, image=master.deposit_img,command=lambda:master.switch_frame(frameDepositAction),font=('arial', '12'),borderwidth=0,activebackground="white",bg='white').pack(pady=10)
@@ -180,12 +184,12 @@ class frameATMAction(Frame):
 class frameDepositAction(Frame):
     def __init__(self, master):
         Frame.__init__(self,master,bg="white")
-        Label(self,text="   ", width=300, bg="#51B948",font=('arial', '35', 'bold')).pack()
+        Label(self,image=master.ncr_img, width=300, bg="#51B948",font=('arial', '35', 'bold')).pack(fill="x",ipady=10)
         Button(self, text="Back", command=lambda:master.switch_frame(frameATMAction),font=('arial', '12'),borderwidth=0,activebackground="white",bg='white').pack(anchor="w")
-        Message(self, text="Enter the amount you would like to deposit.",width = 350, font=('arial', '18'),bg="white").pack(pady=(50,0))
+        Message(self, text="Enter the amount you would like to deposit.",width = 350, font=('arial', '24'),bg="white").pack(pady=(50,0))
         deposit_amount = Entry(self,width=30)
         deposit_amount.pack(pady=25)
-        Button(self, image=master.submit_small_img, command=lambda:self.setAmount(master,deposit_amount),borderwidth=0,activebackground="white",bg='white').pack()
+        Button(self, image=master.submit_small_img, command=lambda:self.setAmount(master,deposit_amount),borderwidth=0,activebackground="white",bg='white').pack(pady=25)
     def setAmount(self,master,entry):
         master.amount = entry.get()
         master.switch_frame(frameQR)
@@ -207,12 +211,12 @@ class frameQR(Frame):
 class frameWithdrawAction(Frame):
     def __init__(self, master):
         Frame.__init__(self,master,bg="white")
-        Label(self,text="   ", width=300, bg="#51B948",font=('arial', '35', 'bold')).pack()
+        Label(self,image=master.ncr_img, width=300, bg="#51B948",font=('arial', '35', 'bold')).pack(fill="x",ipady=10)
         Button(self, text="Back", command=lambda:master.switch_frame(frameATMAction),font=('arial', '12'),borderwidth=0,activebackground="white",bg='white').pack(anchor="w")
-        Message(self, text="Enter the amount you would like to withdraw.",width = 350, font=('arial', '18'),bg="white").pack(pady=(50,0))
+        Message(self, text="Enter the amount you would like to withdraw.",width = 350, font=('arial', '24'),bg="white").pack(pady=(50,0))
         withdraw_amount = Entry(self,width=30)
         withdraw_amount.pack(pady=25)
-        Button(self, image=master.submit_small_img, command=lambda:self.setAmount(master,withdraw_amount),borderwidth=0,activebackground="white",bg='white').pack()
+        Button(self, image=master.submit_small_img, command=lambda:self.setAmount(master,withdraw_amount),borderwidth=0,activebackground="white",bg='white').pack(pady=25)
     def setAmount(self,master,entry):
         master.amount = str(int(entry.get())*-1)
         master.switch_frame(frameQR)
@@ -221,7 +225,7 @@ class frameWithdrawAction(Frame):
 class frameLogin(Frame):
     def __init__(self,master):
         Frame.__init__(self,master,bg="white")
-        Label(self,text="   ", width=300, bg="#51B948",font=('arial', '35', 'bold')).pack()
+        Label(self,image=master.ncr_img, width=300, bg="#51B948",font=('arial', '35', 'bold')).pack(fill="x",ipady=10)
         Message(self, text="Welcome",width = 350,  font=('arial', '30', 'bold'),bg="white").pack(pady=50)
         Label(self,text="Username",pady=10, font=('arial', '18', 'bold'),bg="white").pack(pady=2)
         userInput = Entry(self,width=50)
