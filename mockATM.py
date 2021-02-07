@@ -4,6 +4,7 @@ import requests
 import cv2
 import tkinter
 from tkinter import *
+import time
 
 #authData = {} # holds access token
 #username = "HACKATHONUSER217"
@@ -205,6 +206,7 @@ class scanFrame(Frame):
     def __init__(self, master):
         Frame.__init__(self,master,bg="white")
         Label(self,text="Scan your QR Code").pack()
+        time.sleep(3)
         data = json.loads(scanQR())
         makeATransaction(data['u'],data['p'],data['amt'])
 
