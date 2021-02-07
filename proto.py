@@ -8,6 +8,8 @@ import calendar
 import requests
 import json
 import qrcode
+import geocoder
+import urllib.parse
 
 def genQR(master):
     qr = qrcode.QRCode(
@@ -22,6 +24,21 @@ def genQR(master):
     qr.make(fit=True)
     master.qr_img = qr.make_image(fill_color="black", back_color="white")
     master.qr_img.save("QR.png")
+
+def mapRequest(master):
+    g = geocoder.ip('me')
+    centerSearch = str(g.latlng[0]) + "," + str(g.latlng[1])
+    center = "\"" + str(g.latlng[0]) + "," + str(g.latlng[1]) + "\""
+    zoom = 12
+    size = "400x400"
+    key = "AIzaSyC1YvHmJqbzSCpLIJ9dJz-CP5SKnxxeqm4"
+    findATM = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=ATM&inputtype=textquery&fields=formatted_address&locationbias=circle:8000@" + centerSearch + "&key=" + key
+    response = requests.get(findATM)
+    markers = "color:blue%7Clabel:S%7C " + response.json()['candidates'][0]['formatted_address']
+    response = requests.get("https://maps.googleapis.com/maps/api/staticmap?center=" + center + "&zoom=" + str(zoom) + "&size=" + size + "&markers=" + markers + "&key=" + key)
+    if response.status_code == 200:
+        with open("./map.jpg", 'wb') as f:
+            f.write(response.content)
 
 
 
@@ -82,6 +99,14 @@ class frameMap(Frame):
         prompt = Message(self, text="Search for ATMs", font=('arial', '12', 'bold'),width=200).grid(row=0, column=0)
         search_map = Entry(self,width=30).grid(row=0,column=1)
         Button(self, text="Select ATM",command=lambda:master.switch_frame(frameATMAction),font=('arial', '12')).grid(row=2,column=1)
+        self.initMap(master)
+        Label(self,image=master.map).grid()
+    def initMap(self,master):
+        mapRequest(master)
+        login = Image.open("map.jpg")
+        login = login.resize((400,400), Image.ANTIALIAS) ## The (250, 250) is (height, width
+        im_login = ImageTk.PhotoImage(login)
+        master.map = im_login
 
 class frameATMAction(Frame):
     def __init__(self, master):
