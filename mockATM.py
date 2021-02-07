@@ -167,6 +167,8 @@ def makeATransaction(username,password,amount):
     createRecipient(authData)
     if(createTransfer(userAccount,getRecipients(authData)) == "SUCCESS"):
         return int(userAccount.availableBalance['amount']) + int(amount)
+    else:
+        return ""
 
 """
 val = input("Welcome to your ATM press any key to continue")
