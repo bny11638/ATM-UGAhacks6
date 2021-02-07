@@ -1,8 +1,10 @@
 #This will be the mock atm for making transactions with that will be run on the raspberry PI
 import json
 import requests
+import PIL
+from PIL import ImageTk, Image
 import cv2
-import tkinter
+import tkinter as tk
 from tkinter import *
 import time
 import threading
@@ -14,6 +16,7 @@ import threading
 #targetAccount = "HACKATHONUSER218"
 #password = "uga123"
 transactionId = '61ba5406-fad6-4ae5-ac2b-477b55b6b2f6'
+
 
 def scanQR():
     # set up camera object
@@ -43,6 +46,7 @@ def scanQR():
     # free camera object and exit
     cap.release()
     cv2.destroyAllWindows()
+
 
 class Account:
     def __init__(self,id,institutionUserid,institutionId,accountNumber,availableBalance,username,access_token,institutionCustomerId):
@@ -181,6 +185,7 @@ else:
 class ATM(Tk):
     def __init__(self):
         Tk.__init__(self)
+        self.initImage()
         self.title("NCR ATM")
         self.geometry("1600x1200") 
         self.frame = None
@@ -196,15 +201,32 @@ class ATM(Tk):
             x = threading.Thread(target=self.frame.destroy, args=())
         self.frame = newFrame
         self.frame.pack(fill=BOTH, expand=True)
+    def initImage(self):
+        ncr = PIL.Image.open("resources/ncr.png")
+        ncr = ncr.resize((500, 150), PIL.Image.ANTIALIAS)
+        im_ncr = ImageTk.PhotoImage(ncr)
+        self.ncr_img = im_ncr
+        scan = PIL.Image.open("resources/scan.png")
+        scan = scan.resize((400, 100), PIL.Image.ANTIALIAS)
+        im_scan = ImageTk.PhotoImage(scan)
+        self.scan_img = im_scan
+        mandep = PIL.Image.open("resources/mandep.png")
+        mandep = mandep.resize((400,100), PIL.Image.ANTIALIAS)
+        im_mandep = ImageTk.PhotoImage(mandep)
+        self.mandep_img = im_mandep
+        manwith = PIL.Image.open("resources/manwith.png")
+        manwith = manwith.resize((400,100), PIL.Image.ANTIALIAS)
+        im_manwith = ImageTk.PhotoImage(manwith)
+        self.manwith_img = im_manwith
 
 
 class frameWelcome(Frame):
     def __init__(self, master):
-        Frame.__init__(self,master,bg="white")
-        Label(self,text="Welcome to NCR's banking ATM").pack()
-        Button(self,text="Scan a QR code",command=lambda:self.scanQR(master)).pack()
-        Button(self,text="Manual Withdrawal").pack()
-        Button(self,text="Manual Deposit").pack()
+        Frame.__init__(self,master,bg="#51B948")
+        Label(self,image=master.ncr_img,font=('arial', '50'),bg="#51B948").pack(pady=50)
+        Button(self,image=master.scan_img,command=lambda:self.scanQR(master),borderwidth=0,bg="#51B948",activebackground="#51B948").pack(pady=10)
+        Button(self,image=master.mandep_img,command=lambda:self.scanQR(master),borderwidth=0,bg="#51B948",activebackground="#51B948").pack(pady=10)
+        Button(self,image=master.manwith_img,command=lambda:self.scanQR(master),borderwidth=0,bg="#51B948",activebackground="#51B948").pack(pady=10)
 
     def scanQR(self,master):
         data = json.loads(scanQR())
@@ -215,11 +237,14 @@ class frameWelcome(Frame):
 
 class finishFrame(Frame):
     def __init__(self, master):
-        Frame.__init__(self,master,bg="white")
-        Label(self,text="Display Results").pack()
-        Label(self,text=master.username).pack()
-        Label(self,text=master.accountBal).pack()
-  
+        Frame.__init__(self,master,bg="#51B948")
+        Label(self, text="Transaction Summary for", font=('arial', '48'),width=400,bg="#51B948",fg="white").pack(pady=(50,0))
+        Label(self,text=master.username,font=('arial', '48'),width=400,bg="#51B948",fg="white").pack(pady=(0,50))
+        Label(self,text="Previous Balance",font=('arial', '48'),bg="#51B948",fg="white").pack()
+        Label(self,text="$350.00",font=('arial', '48'),bg="#51B948",fg="white").pack()
+        Label(self,text="New Balance",font=('arial', '48'),bg="#51B948",fg="white").pack()
+        Label(self,text="$%1.2f" %(350+float(master.accountBal)),font=('arial', '48'),bg="#51B948",fg="white").pack()
+
 
 if __name__ == "__main__":
     app=ATM()
