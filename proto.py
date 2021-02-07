@@ -203,7 +203,7 @@ class frameDepositAction(Frame):
         deposit_amount.pack(pady=25)
         Button(self, image=master.submit_small_img, command=lambda:self.setAmount(master,deposit_amount),borderwidth=0,activebackground="white",bg='white').pack(pady=25)
     def setAmount(self,master,entry):
-        master.amount = entry.get()
+        master.ChangeAmount = entry.get()
         master.switch_frame(frameQR)
 
 class frameQR(Frame):
@@ -213,14 +213,19 @@ class frameQR(Frame):
         self.initQR(master)
         Message(self, text="Please scan this QR code at the ATM you have selected.",width=300,font=('arial', '24'),bg="white").pack(pady=(50,10))
         Label(self,image=master.qr_img).pack()
-        Button(self, image=master.finish_img, command=lambda:master.switch_frame(frameHome),font=('arial', '12'),borderwidth=0,activebackground="white",bg='white').pack(pady=(10,0))
+        Button(self, image=master.finish_img, command=lambda:self.finish(master),font=('arial', '12'),borderwidth=0,activebackground="white",bg='white').pack(pady=(10,0))
         Button(self, image=master.cancel_img, command=lambda:master.switch_frame(frameATMAction),font=('arial', '12'),borderwidth=0,activebackground="white",bg='white').pack(pady=(10,0))
     def initQR(self,master):
         genQR(master)
         master.qr_img = Image.open("QR.png")
         master.qr_img = master.qr_img.resize((400,400),Image.ANTIALIAS)
         master.qr_img = ImageTk.PhotoImage(master.qr_img)
-        master.check_balance = int(master.amount) + int(master.check_balance)
+        #master.check_balance = int(master.amount) + int(master.check_balance)
+    def finish(self,master):
+        master.check_balance = int(master.ChangeAmount) + int(master.check_balance)
+        master.switch_frame(frameHome)
+    def cancel(self,master):
+        master.switch_frame(frameHome)
 
 class frameWithdrawAction(Frame):
     def __init__(self, master):
@@ -232,7 +237,7 @@ class frameWithdrawAction(Frame):
         withdraw_amount.pack(pady=25)
         Button(self, image=master.submit_small_img, command=lambda:self.setAmount(master,withdraw_amount),borderwidth=0,activebackground="white",bg='white').pack(pady=25)
     def setAmount(self,master,entry):
-        master.amount = str(int(entry.get())*-1)
+        master.ChangeAmount = str(int(entry.get())*-1)
         master.switch_frame(frameQR)
 
 
