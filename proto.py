@@ -11,6 +11,25 @@ import qrcode
 import geocoder
 import urllib.parse
 
+transactionId = '61ba5406-fad6-4ae5-ac2b-477b55b6b2f6'
+
+def getAuthenticate(username, password):
+    url = "http://ncrdev-dev.apigee.net/digitalbanking/oauth2/v1/token"
+    payload='grant_type=password&username='+username+'&password=' + password
+    headers = {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'transactionId': transactionId,
+    'institutionId': '00516',
+    'Accept': 'application/json',
+    'Authorization': 'Basic YUpaR3l1TmhIMDc4MWhYZ3pGWFl6WGp1ZlRKUEZrVjI6R3U0Y3NUV0N5UzBZVVFWTw=='
+    }
+    response = requests.request("POST", url, headers=headers, data=payload)
+    #print(response.text)
+    #runFirst = json.dumps(response.text)
+    #runFirst = json.loads(runFirst)
+    emptyDict = response.json() 
+    return emptyDict['access_token']
+
 def genQR(master):
     qr = qrcode.QRCode(
         version=1,
@@ -40,8 +59,6 @@ def mapRequest(master):
         with open("./map.jpg", 'wb') as f:
             f.write(response.content)
 
-
-
 class ATM(Tk):
     def __init__(self):
         Tk.__init__(self)
@@ -55,6 +72,9 @@ class ATM(Tk):
         self.password = ""
         self.amount = 0
         self.qr_img = None
+        self.check_balance = 0
+        self.saving_balance = 0
+        self.access_token = 0
     #Switches frame on window
     def switch_frame(self, frameClass):
         newFrame = frameClass(self)
