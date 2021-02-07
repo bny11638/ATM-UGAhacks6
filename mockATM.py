@@ -191,8 +191,7 @@ class ATM(Tk):
             x = threading.Thread(target=self.frame.destroy, args=())
         self.frame = newFrame
         self.frame.pack(fill=BOTH, expand=True)
-    
-    def clickIt(self):
+
 
 class frameWelcome(Frame):
     def __init__(self, master):
