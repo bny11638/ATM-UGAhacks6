@@ -7,6 +7,23 @@ from datetime import date
 import calendar
 import requests
 import json
+import qrcode
+
+def genQR(master):
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_M,
+        box_size=20,
+        border=4,
+    )
+    dictionary = {"u": master.username,"p":master.password,"amt":master.amount}
+    json_object = json.dumps(dictionary, indent = 4)   
+    qr.add_data(json_object)
+    qr.make(fit=True)
+    master.qr_img = qr.make_image(fill_color="black", back_color="white")
+    master.qr_img.save("QR.png")
+
+
 
 class ATM(Tk):
     def __init__(self):
@@ -20,6 +37,7 @@ class ATM(Tk):
         self.username = ""
         self.password = ""
         self.amount = 0
+        self.qr_img = None
     #Switches frame on window
     def switch_frame(self, frameClass):
         newFrame = frameClass(self)
@@ -70,25 +88,41 @@ class frameATMAction(Frame):
 
 class frameDepositAction(Frame):
     def __init__(self, master):
-        Frame.__init__(self,master,bg="white")
-        Button(self, text="Back", command=lambda:master.switch_frame(frameATMAction),font=('arial', '12')).grid()
-        Button(self, text="Submit", command=lambda:master.switch_frame(frameQR)).grid(row=3,column=1)
-        Message(self, text="Enter the amount you would like to deposit.",width = 350, font=('arial', '18', 'bold')).grid(row=1,column=1)
-        deposit_amount = Entry(self,width=30).grid(row=2,column=1)
+        Frame.__init__(self,master)
+        Button(self, text="Back", command=lambda:master.switch_frame(frameATMAction),font=('helvetica', '12')).grid()
+        Message(self, text="Enter the amount you would like to deposit.",width = 350, font=('helvetica', '18', 'bold')).grid(row=1,column=1)
+        deposit_amount = Entry(self,width=30)
+        deposit_amount.grid(row=2,column=1)
+        Button(self, text="Submit", command=lambda:self.setAmount(master,deposit_amount)).grid(row=3,column=1)
+    def setAmount(self,master,entry):
+        master.amount = entry.get()
+        master.switch_frame(frameQR)
 
 class frameQR(Frame):
     def __init__(self,master):
-        Frame.__init__(self,master,bg="white")
-        Button(self, text="Cancel Transaction", command=lambda:master.switch_frame(frameATMAction),font=('arial', '12')).grid(row=0,column=0)
-        Message(self, text="Please scan this QR code at the ATM you have selected.",width=200,font=('arial', '18', 'bold')).grid(row=1,column=1)
+        Frame.__init__(self,master)
+        self.initQR(master)
+        Button(self, text="Cancel Transaction", command=lambda:master.switch_frame(frameATMAction),font=('helvetica', '12')).grid(row=0,column=0)
+        Message(self, text="Please scan this QR code at the ATM you have selected.",width=200,font=('helvetica', '18', 'bold')).grid(row=1,column=1)
+        Label(self,image=master.qr_img).grid()
+    def initQR(self,master):
+        genQR(master)
+        master.qr_img = Image.open("QR.png")
+        master.qr_img = master.qr_img.resize((400,400),Image.ANTIALIAS)
+        master.qr_img = ImageTk.PhotoImage(master.qr_img)
 
 class frameWithdrawAction(Frame):
     def __init__(self, master):
-        Frame.__init__(self,master,bg="white")
-        Button(self, text="Back", command=lambda:master.switch_frame(frameATMAction),font=('arial', '12')).grid()
-        Button(self, text="Submit", command=lambda:master.switch_frame(frameQR)).grid(row=3,column=1)
-        Message(self, text="Enter the amount you would like to withdraw.",width = 350, font=('arial', '18', 'bold')).grid(row=1,column=1)
-        withdraw_amount = Entry(self,width=30).grid(row=2,column=1)
+        Frame.__init__(self,master)
+        Button(self, text="Back", command=lambda:master.switch_frame(frameATMAction),font=('helvetica', '12')).grid()
+        Message(self, text="Enter the amount you would like to withdraw.",width = 350, font=('helvetica', '18', 'bold')).grid(row=1,column=1)
+        withdraw_amount = Entry(self,width=30)
+        withdraw_amount.grid(row=2,column=1)
+        Button(self, text="Submit", command=lambda:self.setAmount(master,withdraw_amount)).grid(row=3,column=1)
+    def setAmount(self,master,entry):
+        master.amount = str(int(entry.get())*-1)
+        master.switch_frame(frameQR)
+
 
 class frameLogin(Frame):
     def __init__(self,master):
