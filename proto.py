@@ -51,12 +51,15 @@ class ATM(Tk):
         login = login.resize((250, 60), Image.ANTIALIAS) ## The (250, 250) is (height, width
         im_login = ImageTk.PhotoImage(login)
         self.login_img = im_login
+        submit = Image.open("resources/submit.png")
+        submit = submit.resize((250, 60), Image.ANTIALIAS) ## The (250, 250) is (height, width
+        im_submit = ImageTk.PhotoImage(submit)
+        self.submit_img = im_submit
 
-#Welcome Screen DESIGN IS FOR MATTHEW
 class frameWelcome(Frame):
     def __init__(self, master):
         Frame.__init__(self,master,bg="white")
-        Label(self,text="   ", width=300, bg="#51B948",font=('arial', '30', 'bold')).pack()
+        Label(self,text="   ", width=300, bg="#51B948",font=('arial', '26', 'bold')).pack()
         Message(self, text="Access your money securely and safely.",width = 250, font=('arial', '30', 'bold'),fg="black",bg="white").pack(pady=100)
         Button(self, image=master.login_img,command=lambda:master.switch_frame(frameLogin),font=('arial', '12'),borderwidth=0,activebackground="white",bg='white').pack(pady=100)
 
@@ -64,10 +67,12 @@ class frameWelcome(Frame):
 class frameHome(Frame):
     def __init__(self, master):
         Frame.__init__(self,master,bg="white")
-        hello = Label(self, text="Hello " + master.username + "!", width=50,font=('arial', '24', 'bold'),bg="#51B948",fg="white")
+        Label(self,text="   ", width=300, bg="#51B948",font=('arial', '26', 'bold')).pack()
+        hello = Label(self, text="Hello " + master.username + ".", width=50,font=('arial', '24', 'bold'),bg="white")
         hello.config(anchor=CENTER)
-        hello.pack()
+        hello.pack(pady=50)
         Button(self, text="InstaCash",command=lambda:master.switch_frame(frameMap),font=('arial', '12')).pack()
+       # Label(self,text="")
 
 
 # Frame for selecting action to perform at the ATM
@@ -127,15 +132,16 @@ class frameWithdrawAction(Frame):
 class frameLogin(Frame):
     def __init__(self,master):
         Frame.__init__(self,master,bg="white")
-        Message(self, text="Welcome Back!",width = 350,  font=('arial', '30', 'bold')).pack()
-        Label(self,text="Username",pady=10, font=('arial', '12', 'bold')).pack(pady=2)
-        userInput = Entry(self,width=30)
+        Label(self,text="   ", width=300, bg="#51B948",font=('arial', '26', 'bold')).pack()
+        Message(self, text="Welcome",width = 350,  font=('arial', '30', 'bold'),bg="white").pack(pady=50)
+        Label(self,text="Username",pady=10, font=('arial', '18', 'bold'),bg="white").pack(pady=2)
+        userInput = Entry(self,width=50)
         userInput.pack()
-        Label(self,text="Password",pady=10, font=('arial', '12', 'bold')).pack(pady=2)
-        passInput = Entry(self,width=30,show='*')
+        Label(self,text="Password",pady=10, font=('arial', '18', 'bold'),bg="white").pack(pady=2)
+        passInput = Entry(self,width=50,show='*')
         passInput.pack()
-        Button(self, text="Submit",command=lambda:self.saveAndSwitch(master,userInput,passInput),font=('arial', '12')).pack(pady=10)
-        Button(self,text="Back", borderwidth=0, activebackground="#6B081F",command=lambda:master.switch_frame(frameWelcome)).pack()
+        Button(self, image=master.submit_img,command=lambda:self.saveAndSwitch(master,userInput,passInput),font=('arial', '12'),borderwidth=0,activebackground="white",bg='white').pack(pady=10)
+        Button(self,text="Back", borderwidth=0, activebackground="white",command=lambda:master.switch_frame(frameWelcome),bg="white",font=('arial', '12')).pack()
         self.invalid_login = Label(self,text="Invalid Login Information", font=('arial', '12', 'bold'))
 
     def saveAndSwitch(self,master,user,password):
