@@ -128,6 +128,10 @@ class ATM(Tk):
         ncr = ncr.resize((200, 50), Image.ANTIALIAS)
         im_ncr = ImageTk.PhotoImage(ncr)
         self.ncr_img = im_ncr
+        cancel = Image.open("resources/cancel.png")
+        cancel = cancel.resize((250,60), Image.ANTIALIAS)
+        im_cancel = ImageTk.PhotoImage(cancel)
+        self.cancel_img = im_cancel
 
 
 class frameWelcome(Frame):
@@ -196,11 +200,12 @@ class frameDepositAction(Frame):
 
 class frameQR(Frame):
     def __init__(self,master):
-        Frame.__init__(self,master)
+        Frame.__init__(self,master,bg="white")
+        Label(self,image=master.ncr_img, width=300, bg="#51B948",font=('arial', '35', 'bold')).pack(fill="x",ipady=10)
         self.initQR(master)
-        Button(self, text="Cancel Transaction", command=lambda:master.switch_frame(frameATMAction),font=('arial', '12')).grid(row=0,column=0)
-        Message(self, text="Please scan this QR code at the ATM you have selected.",width=200,font=('arial', '18', 'bold')).grid(row=1,column=1)
-        Label(self,image=master.qr_img).grid()
+        Message(self, text="Please scan this QR code at the ATM you have selected.",width=300,font=('arial', '24'),bg="white").pack(pady=(50,10))
+        Label(self,image=master.qr_img).pack()
+        Button(self, image=master.cancel_img, command=lambda:master.switch_frame(frameATMAction),font=('arial', '12'),borderwidth=0,activebackground="white",bg='white').pack(pady=(10,0))
     def initQR(self,master):
         genQR(master)
         master.qr_img = Image.open("QR.png")
@@ -227,10 +232,10 @@ class frameLogin(Frame):
         Frame.__init__(self,master,bg="white")
         Label(self,image=master.ncr_img, width=300, bg="#51B948",font=('arial', '35', 'bold')).pack(fill="x",ipady=10)
         Message(self, text="Welcome",width = 350,  font=('arial', '30', 'bold'),bg="white").pack(pady=50)
-        Label(self,text="Username",pady=10, font=('arial', '18', 'bold'),bg="white").pack(pady=2)
+        Label(self,text="Username",pady=10, font=('arial', '18'),bg="white").pack(pady=2)
         userInput = Entry(self,width=50)
         userInput.pack()
-        Label(self,text="Password",pady=10, font=('arial', '18', 'bold'),bg="white").pack(pady=2)
+        Label(self,text="Password",pady=10, font=('arial', '18'),bg="white").pack(pady=2)
         passInput = Entry(self,width=50,show='*')
         passInput.pack()
         Button(self, image=master.submit_img,command=lambda:self.saveAndSwitch(master,userInput,passInput),font=('arial', '12'),borderwidth=0,activebackground="white",bg='white').pack(pady=50)
