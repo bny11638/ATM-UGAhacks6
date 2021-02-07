@@ -237,10 +237,13 @@ class frameWelcome(Frame):
 
 class finishFrame(Frame):
     def __init__(self, master):
-        Frame.__init__(self,master,bg="white")
-        Label(self,text="Display Results").pack()
-        Label(self,text=master.username).pack()
-        Label(self,text=master.accountBal).pack()
+        Frame.__init__(self,master,bg="#51B948")
+        Label(self, text="Transaction Summary for", font=('arial', '48'),width=400,bg="#51B948",fg="white").pack(pady=(50,0))
+        Label(self,text=master.username,font=('arial', '48'),width=400,bg="#51B948",fg="white").pack(pady=(0,50))
+        Label(self,text="Previous Balance",font=('arial', '48'),bg="#51B948",fg="white").pack()
+        Label(self,text="$350.00",font=('arial', '48'),bg="#51B948",fg="white").pack()
+        Label(self,text="New Balance",font=('arial', '48'),bg="#51B948",fg="white").pack()
+        Label(self,text="$%1.2f" %(350+float(master.accountBal)),font=('arial', '48'),bg="#51B948",fg="white").pack()
 
 
 if __name__ == "__main__":
