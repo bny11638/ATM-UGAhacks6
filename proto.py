@@ -11,6 +11,36 @@ import qrcode
 import geocoder
 import urllib.parse
 
+transactionId = '61ba5406-fad6-4ae5-ac2b-477b55b6b2f6'
+
+def getAccounts(access):
+    url = "http://ncrdev-dev.apigee.net/digitalbanking/db-accounts/v1/accounts"
+    payload={}
+    headers = {
+    'Authorization': 'Bearer ' + access,
+    'transactionId': transactionId,
+    'Accept': 'application/json'
+    }
+    response = requests.request("GET", url, headers=headers, data=payload)
+    return response.json()
+
+def getAuthenticate(username, password):
+    url = "http://ncrdev-dev.apigee.net/digitalbanking/oauth2/v1/token"
+    payload='grant_type=password&username='+username+'&password=' + password
+    headers = {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'transactionId': transactionId,
+    'institutionId': '00516',
+    'Accept': 'application/json',
+    'Authorization': 'Basic YUpaR3l1TmhIMDc4MWhYZ3pGWFl6WGp1ZlRKUEZrVjI6R3U0Y3NUV0N5UzBZVVFWTw=='
+    }
+    response = requests.request("POST", url, headers=headers, data=payload)
+    #print(response.text)
+    #runFirst = json.dumps(response.text)
+    #runFirst = json.loads(runFirst)
+    emptyDict = response.json() 
+    return emptyDict['access_token']
+
 def genQR(master):
     qr = qrcode.QRCode(
         version=1,
@@ -40,8 +70,6 @@ def mapRequest(master):
         with open("./map.jpg", 'wb') as f:
             f.write(response.content)
 
-
-
 class ATM(Tk):
     def __init__(self):
         Tk.__init__(self)
@@ -55,6 +83,11 @@ class ATM(Tk):
         self.password = ""
         self.amount = 0
         self.qr_img = None
+        self.check_balance = 0
+        self.invest_balance = 0
+        self.loan_balance = 0
+        self.access_token = 0
+        self.account = {}
     #Switches frame on window
     def switch_frame(self, frameClass):
         newFrame = frameClass(self)
@@ -150,6 +183,7 @@ class frameQR(Frame):
         master.qr_img = Image.open("QR.png")
         master.qr_img = master.qr_img.resize((400,400),Image.ANTIALIAS)
         master.qr_img = ImageTk.PhotoImage(master.qr_img)
+        master.check_balance = master.amount + master.check_balance
 
 class frameWithdrawAction(Frame):
     def __init__(self, master):
@@ -182,6 +216,11 @@ class frameLogin(Frame):
     def saveAndSwitch(self,master,user,password):
         master.username = user.get()
         master.password = password.get()
+        master.access_token = getAuthenticate(user.get(),password.get())
+        master.account = getAccounts(master.access_token)
+        master.check_balance = master.account['accounts'][0]['availableBalance']['amount']
+        master.invest_balance = master.account['accounts'][1]['availableBalance']['amount']
+        master.loan_balance = master.account['accounts'][2]['availableBalance']['amount']
         master.switch_frame(frameHome)
 
  #:) starting the app
