@@ -2,6 +2,8 @@
 import json
 import requests
 import cv2
+import tkinter
+from tkinter import *
 
 #authData = {} # holds access token
 #username = "HACKATHONUSER217"
@@ -173,6 +175,19 @@ if (val == 'y'):
     makeATransaction(data['u'],data['p'],data['amt'])
 else:
     print("Have a great day!")
+
+class ATM(Tk):
+    def __init__(self):
+        Tk.__init__(self)
+        self.title("NCR ATM")
+        Label(self,text="Welcome to NCR's banking ATM").pack()
+        Button(self,text="Scan a QR code").pack()
+        Button(self,text="Manual Withdrawal").pack()
+        Button(self,text="Manual Deposit").pack()
+
+if __name__ == "__main__":
+    app=ATM()
+    app.mainloop(0)
 
 
 
