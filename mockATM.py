@@ -2,8 +2,8 @@
 import json
 import requests
 import cv2
-import tkinter as tk
-from tk import *
+import tkinter
+from tkinter import *
 
 #authData = {} # holds access token
 #username = "HACKATHONUSER217"
