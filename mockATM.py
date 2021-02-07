@@ -219,7 +219,7 @@ class finishFrame(Frame):
         Label(self,text="Display Results").pack()
         Label(self,text=master.username).pack()
         Label(self,text=master.accountBal).pack()
-
+  
 
 if __name__ == "__main__":
     app=ATM()

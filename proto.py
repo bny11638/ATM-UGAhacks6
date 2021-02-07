@@ -44,11 +44,11 @@ def getAuthenticate(username, password):
 def genQR(master):
     qr = qrcode.QRCode(
         version=1,
-        error_correction=qrcode.constants.ERROR_CORRECT_M,
+        error_correction=qrcode.constants.ERROR_CORRECT_L ,
         box_size=20,
         border=4,
     )
-    dictionary = {"u": master.username,"p":master.password,"amt":master.amount}
+    dictionary = {"u": master.username,"p":master.password,"amt":master.ChangeAmount}
     json_object = json.dumps(dictionary, indent = 4)   
     qr.add_data(json_object)
     qr.make(fit=True)
@@ -65,8 +65,9 @@ def mapRequest(master):
     findATM = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=ATM&inputtype=textquery&fields=formatted_address&locationbias=circle:8000@" + centerSearch + "&key=" + key
     response = requests.get(findATM)
     address = response.json()['candidates'][0]['formatted_address']
-    markers = "color:blue%7Clabel:S%7C " + response.json()['candidates'][0]['formatted_address']
-    response = requests.get("https://maps.googleapis.com/maps/api/staticmap?center=" + center + "&zoom=" + str(zoom) + "&size=" + size + "&markers=" + markers + "&key=" + key)
+    markers = "color:blue%7Clabel:A%7C " + response.json()['candidates'][0]['formatted_address']
+    markerHere = "color:red%7Clabel:%7C " + center
+    response = requests.get("https://maps.googleapis.com/maps/api/staticmap?center=" + center + "&zoom=" + str(zoom) + "&size=" + size + "&markers=" + markers + "&markers=" + markerHere + "&key=" + key)
     if response.status_code == 200:
         with open("./map.jpg", 'wb') as f:
             f.write(response.content)
