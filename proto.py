@@ -72,6 +72,11 @@ class ATM(Tk):
         submit = submit.resize((250, 60), Image.ANTIALIAS) ## The (250, 250) is (height, width
         im_submit = ImageTk.PhotoImage(submit)
         self.submit_img = im_submit
+        select = Image.open("resources/selectatm.png")
+        select = select.resize((250, 60), Image.ANTIALIAS)
+        im_select = ImageTk.PhotoImage(select)
+        self.select_img = im_select
+
 
 class frameWelcome(Frame):
     def __init__(self, master):
@@ -88,19 +93,23 @@ class frameHome(Frame):
         hello = Label(self, text="Hello " + master.username + ".", width=50,font=('arial', '24', 'bold'),bg="white")
         hello.config(anchor=CENTER)
         hello.pack(pady=50)
+        Label(self,text="ACCOUNT INFORMATION",font=('arial', '22'),fg="#616161",bg="white").pack(anchor="w",pady=25)
+        Label(self,text="CHECKING 1234",font=('arial', '20'),bg="white").pack(anchor="w",padx=25)
+        Label(self,text="Balance: -------------------------",font=('arial', '18'),bg="white").pack(anchor="w",padx=25)
+        Label(self,text="SAVINGS 1234",font=('arial', '20'),bg="white").pack(anchor="w",pady=(50,0),padx=25)
+        Label(self,text="Balance: -------------------------",font=('arial', '18'),bg="white").pack(anchor="w",padx=25)
         Button(self, text="InstaCash",command=lambda:master.switch_frame(frameMap),font=('arial', '12')).pack()
-       # Label(self,text="")
 
 
 # Frame for selecting action to perform at the ATM
 class frameMap(Frame):
     def __init__(self,master):
         Frame.__init__(self,master,bg="white")
-        prompt = Message(self, text="Search for ATMs", font=('arial', '12', 'bold'),width=200).grid(row=0, column=0)
-        search_map = Entry(self,width=30).grid(row=0,column=1)
-        Button(self, text="Select ATM",command=lambda:master.switch_frame(frameATMAction),font=('arial', '12')).grid(row=2,column=1)
+        Label(self,text="   ", width=300, bg="#51B948",font=('arial', '26', 'bold')).pack()
+        prompt = Message(self, text="Nearest ATM Machines:", font=('arial', '24', 'bold'),width=400,bg="white").pack(pady=50)
         self.initMap(master)
-        Label(self,image=master.map).grid()
+        Label(self,image=master.map).pack()
+        Button(self, image=master.select_img,command=lambda:master.switch_frame(frameATMAction),font=('arial', '12'),borderwidth=0,activebackground="white",bg='white').pack(pady=25)
     def initMap(self,master):
         mapRequest(master)
         login = Image.open("map.jpg")
@@ -111,10 +120,11 @@ class frameMap(Frame):
 class frameATMAction(Frame):
     def __init__(self, master):
         Frame.__init__(self,master,bg="white")
-        Button(self, text="Back", command=lambda:master.switch_frame(frameMap),font=('arial', '12')).grid(row=0,column=0)
-        Message(self, text="Select your ATM action below.",width = 350, font=('arial', '18', 'bold')).grid(row=0,column=1)
-        Button(self, text="Deposit",command=lambda:master.switch_frame(frameDepositAction),font=('arial', '12')).grid(row=1,column=1)
-        Button(self, text="Withdraw",command=lambda:master.switch_frame(frameWithdrawAction),font=('arial', '12')).grid(row=2,column=1)
+        Label(self,text="   ", width=300, bg="#51B948",font=('arial', '26', 'bold')).pack()
+        Button(self, text="Back", command=lambda:master.switch_frame(frameMap),font=('arial', '12')).pack(anchor="w")
+        Message(self, text="Select your ATM action below.",width = 350, font=('arial', '18', 'bold'),bg="white").pack()
+        Button(self, text="Deposit",command=lambda:master.switch_frame(frameDepositAction),font=('arial', '12')).pack()
+        Button(self, text="Withdraw",command=lambda:master.switch_frame(frameWithdrawAction),font=('arial', '12')).pack()
 
 class frameDepositAction(Frame):
     def __init__(self, master):
