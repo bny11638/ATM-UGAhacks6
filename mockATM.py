@@ -180,10 +180,36 @@ class ATM(Tk):
     def __init__(self):
         Tk.__init__(self)
         self.title("NCR ATM")
+        self.geometry("1600x1200") 
+        self.frame = None
+        self.switch_frame(frameWelcome)
+    #Switches frame on window
+    def switch_frame(self, frameClass):
+        newFrame = frameClass(self)
+        if self.frame is not None:
+            self.frame.pack_forget()
+            x = threading.Thread(target=self.frame.destroy, args=())
+        self.frame = newFrame
+        self.frame.pack(fill=BOTH, expand=True)
+    
+    def clickIt(self):
+
+class frameWelcome(Frame):
+    def __init__(self, master):
+        Frame.__init__(self,master,bg="white")
         Label(self,text="Welcome to NCR's banking ATM").pack()
-        Button(self,text="Scan a QR code").pack()
+        Button(self,text="Scan a QR code",command=lambda:master.switch_frame(scanFrame)).pack()
         Button(self,text="Manual Withdrawal").pack()
         Button(self,text="Manual Deposit").pack()
+
+class scanFrame(Frame):
+    def __init__(self, master):
+        Frame.__init__(self,master,bg="white")
+        Label(self,text="Scan your QR Code").pack()
+        data = json.loads(scanQR())
+        makeATransaction(data['u'],data['p'],data['amt'])
+
+
 
 if __name__ == "__main__":
     app=ATM()
