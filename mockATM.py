@@ -33,7 +33,8 @@ def scanQR():
             cv2.putText(img, data, (int(bbox[0][0][0]), int(bbox[0][0][1]) - 10), cv2.FONT_HERSHEY_SIMPLEX,
                         0.5, (0, 255, 0), 2)
             if data:
-                print(data)
+                cap.release()
+                cv2.destroyAllWindows()
                 return data
         # display the image preview
         cv2.imshow("code detector", img)
@@ -134,10 +135,6 @@ def getRecipients(authData):
 
     
 
-
-
-
-
 #main loop for script
 #intializing User Account     def __init__(id,institutionUserid,institutionId,accountNumber,availableBalance,username,access_token):
 """
@@ -188,6 +185,9 @@ class ATM(Tk):
         self.geometry("1600x1200") 
         self.frame = None
         self.switch_frame(frameWelcome)
+        self.username = ""
+        self.amt = 0
+        self.accountBal = 350
     #Switches frame on window
     def switch_frame(self, frameClass):
         newFrame = frameClass(self)
@@ -205,8 +205,11 @@ class frameWelcome(Frame):
         Button(self,text="Scan a QR code",command=lambda:self.scanQR(master)).pack()
         Button(self,text="Manual Withdrawal").pack()
         Button(self,text="Manual Deposit").pack()
+
     def scanQR(self,master):
         data = json.loads(scanQR())
+        master.username = data['u']
+        master.accountBal = data['amt']
         makeATransaction(data['u'],data['p'],data['amt'])
         master.switch_frame(finishFrame)
 
@@ -214,6 +217,8 @@ class finishFrame(Frame):
     def __init__(self, master):
         Frame.__init__(self,master,bg="white")
         Label(self,text="Display Results").pack()
+        Label(self,text=master.username).pack()
+        Label(self,text=master.accountBal).pack()
 
 
 if __name__ == "__main__":
