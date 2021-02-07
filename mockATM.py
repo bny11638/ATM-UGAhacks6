@@ -3,7 +3,7 @@ import json
 import requests
 import PIL
 from PIL import ImageTk, Image
-#import cv2
+import cv2
 import tkinter as tk
 from tkinter import *
 import time
@@ -17,7 +17,7 @@ import threading
 #password = "uga123"
 transactionId = '61ba5406-fad6-4ae5-ac2b-477b55b6b2f6'
 
-"""
+
 def scanQR():
     # set up camera object
     cap = cv2.VideoCapture(0)
@@ -46,7 +46,7 @@ def scanQR():
     # free camera object and exit
     cap.release()
     cv2.destroyAllWindows()
-    """
+
 
 class Account:
     def __init__(self,id,institutionUserid,institutionId,accountNumber,availableBalance,username,access_token,institutionCustomerId):
