@@ -166,9 +166,9 @@ def makeATransaction(username,password,amount):
     #print(userAccount.username + " " + userAccount.i_u_d + " " + str(userAccount.availableBalance['amount']))
     createRecipient(authData)
     if(createTransfer(userAccount,getRecipients(authData)) == "SUCCESS"):
-        print("QR code request has been completed!")
-        print("Balance of " + username + " is now: " + str(int(userAccount.availableBalance['amount']) + int(amount)))
+        return int(userAccount.availableBalance['amount']) + int(amount)
 
+"""
 val = input("Welcome to your ATM press any key to continue")
 val = input("Are you here to deposit or withdraw via QR code? (y/n)") 
 if (val == 'y'):
@@ -177,6 +177,7 @@ if (val == 'y'):
     makeATransaction(data['u'],data['p'],data['amt'])
 else:
     print("Have a great day!")
+"""
 
 class ATM(Tk):
     def __init__(self):
@@ -199,18 +200,18 @@ class frameWelcome(Frame):
     def __init__(self, master):
         Frame.__init__(self,master,bg="white")
         Label(self,text="Welcome to NCR's banking ATM").pack()
-        Button(self,text="Scan a QR code",command=lambda:master.switch_frame(scanFrame)).pack()
+        Button(self,text="Scan a QR code",command=lambda:self.scanQR()).pack()
         Button(self,text="Manual Withdrawal").pack()
         Button(self,text="Manual Deposit").pack()
-
-class scanFrame(Frame):
-    def __init__(self, master):
-        Frame.__init__(self,master,bg="white")
-        Label(self,text="Scan your QR Code").pack()
-        time.sleep(3)
+    def scanQR(self):
         data = json.loads(scanQR())
         makeATransaction(data['u'],data['p'],data['amt'])
+        master.switch_frame(finishFrame)
 
+class finishFrame(Frame):
+    def __init__(self, master):
+        Frame.__init__(self,master,bg="white")
+        Label(self,text="Display Results").pack()
 
 
 if __name__ == "__main__":
