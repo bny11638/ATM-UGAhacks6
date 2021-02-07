@@ -64,11 +64,13 @@ def mapRequest(master):
     key = "AIzaSyC1YvHmJqbzSCpLIJ9dJz-CP5SKnxxeqm4"
     findATM = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=ATM&inputtype=textquery&fields=formatted_address&locationbias=circle:8000@" + centerSearch + "&key=" + key
     response = requests.get(findATM)
+    address = response.json()['candidates'][0]['formatted_address']
     markers = "color:blue%7Clabel:S%7C " + response.json()['candidates'][0]['formatted_address']
     response = requests.get("https://maps.googleapis.com/maps/api/staticmap?center=" + center + "&zoom=" + str(zoom) + "&size=" + size + "&markers=" + markers + "&key=" + key)
     if response.status_code == 200:
         with open("./map.jpg", 'wb') as f:
             f.write(response.content)
+            return address
 
 class ATM(Tk):
     def __init__(self):
@@ -129,9 +131,13 @@ class ATM(Tk):
         im_ncr = ImageTk.PhotoImage(ncr)
         self.ncr_img = im_ncr
         cancel = Image.open("resources/cancel.png")
-        cancel = cancel.resize((250,60), Image.ANTIALIAS)
+        cancel = cancel.resize((200,50), Image.ANTIALIAS)
         im_cancel = ImageTk.PhotoImage(cancel)
         self.cancel_img = im_cancel
+        finish = Image.open("resources/finish.png")
+        finish = finish.resize((200,50), Image.ANTIALIAS)
+        im_finish = ImageTk.PhotoImage(finish)
+        self.finish_img = im_finish
 
 
 class frameWelcome(Frame):
@@ -151,26 +157,28 @@ class frameHome(Frame):
         hello2.pack()
         Label(self,text="ACCOUNT INFORMATION",font=('arial', '22'),fg="#616161",bg="white").pack(anchor="w",pady=25,padx=(10,0))
         Label(self,text="CHECKING 1234",font=('arial', '18'),bg="white").pack(anchor="w",padx=25)
-        Label(self,text="Balance: -------------------------          " + str(master.check_balance),font=('arial', '16'),bg="white").pack(anchor="w",padx=25)
+        Label(self,text="Balance: -------------------------          %1.2f" %(master.check_balance),font=('arial', '16'),bg="white").pack(anchor="w",padx=25)
         Label(self,text="INVESTING 1234",font=('arial', '18'),bg="white").pack(anchor="w",pady=(50,0),padx=25)
-        Label(self,text="Balance: -------------------------          " + str(master.invest_balance),font=('arial', '16'),bg="white").pack(anchor="w",padx=25)
+        Label(self,text="Balance: -------------------------          %1.2f" %(master.invest_balance),font=('arial', '16'),bg="white").pack(anchor="w",padx=25)
         Label(self,text="LOANS 1234",font=('arial', '18'),bg="white").pack(anchor="w",pady=(50,0),padx=25)
-        Label(self,text="Balance: -------------------------          " + str(master.loan_balance),font=('arial', '16'),bg="white").pack(anchor="w",padx=25)
-        Button(self, image=master.select_img,command=lambda:master.switch_frame(frameMap),font=('arial', '12'),borderwidth=0,activebackground="white",bg='white').pack(pady=(225,0))
+        Label(self,text="Balance: -------------------------          %1.2f" %(master.loan_balance),font=('arial', '16'),bg="white").pack(anchor="w",padx=25)
+        Button(self, image=master.select_img,command=lambda:master.switch_frame(frameMap),font=('arial', '12'),borderwidth=0,activebackground="white",bg='white').pack(pady=(210,0))
 
 
 # Frame for selecting action to perform at the ATM
 class frameMap(Frame):
     def __init__(self,master):
+        self.address = ""
         Frame.__init__(self,master,bg="white")
         Label(self,image=master.ncr_img, width=300, bg="#51B948",font=('arial', '35', 'bold')).pack(fill="x",ipady=10)
         Button(self, text="Back", command=lambda:master.switch_frame(frameHome),font=('arial', '12'),borderwidth=0,activebackground="white",bg='white').pack(anchor="w")
-        prompt = Message(self, text="Nearest ATM Machines:", font=('arial', '24'),width=400,bg="white").pack(pady=50)
+        prompt = Message(self, text="Nearest ATM Machine:", font=('arial', '24'),width=400,bg="white").pack(pady=50)
         self.initMap(master)
         Label(self,image=master.map).pack()
-        Button(self, image=master.select_img,command=lambda:master.switch_frame(frameATMAction),font=('arial', '12'),borderwidth=0,activebackground="white",bg='white').pack(pady=(62,0))
+        Label(self,text=self.address,bg="white",font=('arial', '12')).pack()
+        Button(self, image=master.select_img,command=lambda:master.switch_frame(frameATMAction),font=('arial', '12'),borderwidth=0,activebackground="white",bg='white').pack(pady=(25,0))
     def initMap(self,master):
-        mapRequest(master)
+        self.address = mapRequest(master)
         login = Image.open("map.jpg")
         login = login.resize((400,400), Image.ANTIALIAS) ## The (250, 250) is (height, width
         im_login = ImageTk.PhotoImage(login)
@@ -205,6 +213,7 @@ class frameQR(Frame):
         self.initQR(master)
         Message(self, text="Please scan this QR code at the ATM you have selected.",width=300,font=('arial', '24'),bg="white").pack(pady=(50,10))
         Label(self,image=master.qr_img).pack()
+        Button(self, image=master.finish_img, command=lambda:master.switch_frame(frameHome),font=('arial', '12'),borderwidth=0,activebackground="white",bg='white').pack(pady=(10,0))
         Button(self, image=master.cancel_img, command=lambda:master.switch_frame(frameATMAction),font=('arial', '12'),borderwidth=0,activebackground="white",bg='white').pack(pady=(10,0))
     def initQR(self,master):
         genQR(master)
