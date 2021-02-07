@@ -206,7 +206,7 @@ class frameQR(Frame):
         master.qr_img = Image.open("QR.png")
         master.qr_img = master.qr_img.resize((400,400),Image.ANTIALIAS)
         master.qr_img = ImageTk.PhotoImage(master.qr_img)
-        master.check_balance = master.amount + master.check_balance
+        master.check_balance = int(master.amount) + int(master.check_balance)
 
 class frameWithdrawAction(Frame):
     def __init__(self, master):

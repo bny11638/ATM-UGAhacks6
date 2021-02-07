@@ -4,6 +4,8 @@ import requests
 import cv2
 import tkinter
 from tkinter import *
+import time
+import threading
 
 #authData = {} # holds access token
 #username = "HACKATHONUSER217"
@@ -164,9 +166,11 @@ def makeATransaction(username,password,amount):
     #print(userAccount.username + " " + userAccount.i_u_d + " " + str(userAccount.availableBalance['amount']))
     createRecipient(authData)
     if(createTransfer(userAccount,getRecipients(authData)) == "SUCCESS"):
-        print("QR code request has been completed!")
-        print("Balance of " + username + " is now: " + str(int(userAccount.availableBalance['amount']) + int(amount)))
+        return int(userAccount.availableBalance['amount']) + int(amount)
+    else:
+        return ""
 
+"""
 val = input("Welcome to your ATM press any key to continue")
 val = input("Are you here to deposit or withdraw via QR code? (y/n)") 
 if (val == 'y'):
@@ -175,15 +179,42 @@ if (val == 'y'):
     makeATransaction(data['u'],data['p'],data['amt'])
 else:
     print("Have a great day!")
+"""
 
 class ATM(Tk):
     def __init__(self):
         Tk.__init__(self)
         self.title("NCR ATM")
+        self.geometry("1600x1200") 
+        self.frame = None
+        self.switch_frame(frameWelcome)
+    #Switches frame on window
+    def switch_frame(self, frameClass):
+        newFrame = frameClass(self)
+        if self.frame is not None:
+            self.frame.pack_forget()
+            x = threading.Thread(target=self.frame.destroy, args=())
+        self.frame = newFrame
+        self.frame.pack(fill=BOTH, expand=True)
+
+
+class frameWelcome(Frame):
+    def __init__(self, master):
+        Frame.__init__(self,master,bg="white")
         Label(self,text="Welcome to NCR's banking ATM").pack()
-        Button(self,text="Scan a QR code").pack()
+        Button(self,text="Scan a QR code",command=lambda:self.scanQR(master)).pack()
         Button(self,text="Manual Withdrawal").pack()
         Button(self,text="Manual Deposit").pack()
+    def scanQR(self,master):
+        data = json.loads(scanQR())
+        makeATransaction(data['u'],data['p'],data['amt'])
+        master.switch_frame(finishFrame)
+
+class finishFrame(Frame):
+    def __init__(self, master):
+        Frame.__init__(self,master,bg="white")
+        Label(self,text="Display Results").pack()
+
 
 if __name__ == "__main__":
     app=ATM()
