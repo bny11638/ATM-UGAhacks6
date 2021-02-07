@@ -229,7 +229,7 @@ class frameWelcome(Frame):
         Button(self,image=master.manwith_img,command=lambda:self.scanQR(master),borderwidth=0,bg="#51B948",activebackground="#51B948").pack(pady=10)
 
     def scanQR(self,master):
-        #data = json.loads(scanQR())
+        data = json.loads(scanQR())
         master.username = data['u']
         master.accountBal = data['amt']
         makeATransaction(data['u'],data['p'],data['amt'])
