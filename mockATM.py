@@ -202,10 +202,10 @@ class frameWelcome(Frame):
     def __init__(self, master):
         Frame.__init__(self,master,bg="white")
         Label(self,text="Welcome to NCR's banking ATM").pack()
-        Button(self,text="Scan a QR code",command=lambda:self.scanQR()).pack()
+        Button(self,text="Scan a QR code",command=lambda:self.scanQR(master)).pack()
         Button(self,text="Manual Withdrawal").pack()
         Button(self,text="Manual Deposit").pack()
-    def scanQR(self):
+    def scanQR(self,master):
         data = json.loads(scanQR())
         makeATransaction(data['u'],data['p'],data['amt'])
         master.switch_frame(finishFrame)
